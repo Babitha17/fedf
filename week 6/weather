@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini Weather App</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      background: linear-gradient(#dbeafe, #eff6ff);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh; margin: 0;
+    }
+    h1 { color: #1e3a8a; }
+    #app { 
+      background: white; padding: 20px; border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center;
+      width: 300px;
+    }
+    input, button { padding: 10px; margin: 8px 0; width: 100%; font-size: 16px; }
+    button { background: #2563eb; color: white; border: none; cursor: pointer; }
+    #result { margin-top: 15px; font-size: 18px; }
+    .error { color: #dc2626; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🌦️ Weather App</h1>
+  <div id="app">
+    <input id="city" type="text" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('city').value.trim();
+      const result = document.getElementById('result');
+      if (!city) return result.innerHTML = "<div class='error'>Enter a city name!</div>";
+
+      result.textContent = "Loading...";
+      try {
+        const res = await fetch(`https://wttr.in/${city}?format=j1`);
+        const data = await res.json();
+        const c = data.current_condition[0];
+        result.innerHTML = `
+          🌍 ${city}<br>
+          🌡️ Temp: ${c.temp_C} °C<br>
+          ☁️ ${c.weatherDesc[0].value}<br>
+          💧 Humidity: ${c.humidity}%
+        `;
+        localStorage.setItem("lastCity", city);
+      } catch (e) {
+        result.innerHTML = "<div class='error'>City not found!</div>";
+      }
+    }
+
+    // Auto-load last searched city
+    window.onload = () => {
+      const last = localStorage.getItem("lastCity");
+      if (last) {
+        document.getElementById('city').value = last;
+        getWeather();
+      }
+    };
+  </script>
+</body>
+</html>
