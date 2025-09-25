@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi-page HTML Project</title>
+</head>
+
+<frameset rows="20%,80%">
+    <!-- Top Frame -->
+    <frame name="topframe" srcdoc='
+        <!DOCTYPE html>
+        <html>
+        <head><title>Header</title></head>
+        <body style="background-color: #333; color: white; text-align: center;">
+            <h1>Welcome to Our Tech Store</h1>
+        </body>
+        </html>
+    '>
+
+    <frameset cols="20%,80%">
+        <!-- Left Frame (Navigation) -->
+        <frame name="leftframe" srcdoc='
+            <!DOCTYPE html>
+            <html>
+            <head><title>Navigation</title></head>
+            <body style="background-color: #f0f0f0;">
+                <ul style="list-style-type: none; padding: 0;">
+                    <li><a href="#home" target="rightframe">Home</a></li>
+                    <li><a href="#register" target="rightframe">Register</a></li>
+                    <li><a href="#login" target="rightframe">Login</a></li>
+                    <li><a href="#laptops" target="rightframe">Laptops</a></li>
+                    <li><a href="#mobiles" target="rightframe">Mobiles</a></li>
+                    <li><a href="#wifi" target="rightframe">WiFi Routers</a></li>
+                    <li><a href="#pendrives" target="rightframe">Pendrives</a></li>
+                    <li><a href="#contact" target="rightframe">Contact Us</a></li>
+                </ul>
+            </body>
+            </html>
+        '>
+
+        <!-- Right Frame (Content) -->
+        <frame name="rightframe" srcdoc='
+            <!DOCTYPE html>
+            <html>
+            <head><title>Content</title></head>
+            <body>
+                <h2>Welcome!</h2>
+                <p>Select a category from the left menu.</p>
+            </body>
+            </html>
+        '>
+    </frameset>
+</frameset>
+
+<!-- Embedding all content with JavaScript for navigation -->
+<script>
+    const pages = {
+        "#home": "<h2>Home Page</h2><p>Welcome to our Tech Store!</p>",
+        "#register": "<h2>Register</h2><form><input type='text' placeholder='Name'><br><input type='email' placeholder='Email'><br><button>Register</button></form>",
+        "#login": "<h2>Login</h2><form><input type='text' placeholder='Username'><br><input type='password' placeholder='Password'><br><button>Login</button></form>",
+        "#laptops": `<h2>Available Laptops</h2><ul><li>Dell Inspiron 15</li><li>HP Pavilion x360</li><li>Lenovo IdeaPad 5</li><li>Apple MacBook Air</li></ul>`,
+        "#mobiles": "<h2>Mobiles</h2><ul><li>iPhone 13</li><li>Samsung Galaxy S21</li><li>OnePlus 9</li></ul>",
+        "#wifi": "<h2>WiFi Routers</h2><ul><li>TP-Link Archer</li><li>Netgear Nighthawk</li></ul>",
+        "#pendrives": "<h2>Pendrives</h2><ul><li>SanDisk 64GB</li><li>HP 32GB</li></ul>",
+        "#contact": "<h2>Contact Us</h2><p>Email: contact@techstore.com</p><p>Phone: 123-456-7890</p>"
+    };
+
+    // Wait for frames to load before adding event listeners
+    window.onload = () => {
+        const leftFrame = window.frames["leftframe"];
+        const rightFrame = window.frames["rightframe"];
+
+        leftFrame.document.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", e => {
+                e.preventDefault();
+                const href = link.getAttribute("href");
+                if (pages[href]) {
+                    rightFrame.document.body.innerHTML = pages[href];
+                } else {
+                    rightFrame.document.body.innerHTML = "<h2>Page Not Found</h2>";
+                }
+            });
+        });
+    };
+</script>
+
+</html>
