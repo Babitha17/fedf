@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Babitha Bookstore</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .box {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 45%;
+      min-width: 280px;
+    }
+    .book, .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .book:last-child, .cart-item:last-child {
+      border-bottom: none;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .remove-btn {
+      background: red;
+    }
+    .remove-btn:hover {
+      background: darkred;
+    }
+    .cart-total {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 My Bookstore</h1>
+  <div class="container">
+    <div class="box">
+      <h2>Available Books</h2>
+      <div id="bookList"></div>
+    </div>
+    <div class="box">
+      <h2>Your Cart 🛒</h2>
+      <div id="cartItems"></div>
+      <div class="cart-total" id="cartTotal">Total: ₹0</div>
+    </div>
+  </div>
+
+  <script>
+    // Sample books data
+    const books = [
+      { title: "JavaScript Essentials", author: "John Doe", price: 499, availability: "in stock" },
+      { title: "Learn React", author: "Jane Smith", price: 699, availability: "in stock" },
+      { title: "Node.js in Action", author: "Mark Lee", price: 599, availability: "out of stock" },
+      { title: "Python for Everyone", author: "Ramya Krishna", price: 450, availability: "in stock" }
+    ];
+
+    let cart = [];
+
+    function displayBooks() {
+      const bookList = document.getElementById("bookList");
+      bookList.innerHTML = "";
+      books.forEach((book, index) => {
+        const bookDiv = document.createElement("div");
+        bookDiv.classList.add("book");
+        bookDiv.innerHTML = `
+          <div>
+            <strong>${book.title}</strong><br>
+            <small>by ${book.author}</small><br>
+            <span>₹${book.price}</span>
+          </div>
+          <div>
+            ${book.availability === "in stock"
+              ? `<button onclick="addToCart(${index})">Add to Cart</button>`
+              : `<span style="color:red;">Out of Stock</span>`}
+          </div>
+        `;
+        bookList.appendChild(bookDiv);
+      });
+    }
+
+    function addToCart(index) {
+      cart.push(books[index]);
+      updateCartUI();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function calculateTotal() {
+      return cart.reduce((sum, book) => sum + book.price, 0);
+    }
+
+    function updateCartUI() {
+      const cartItemsDiv = document.getElementById("cartItems");
+      const cartTotalDiv = document.getElementById("cartTotal");
+      cartItemsDiv.innerHTML = "";
+
+      cart.forEach((book, index) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("cart-item");
+        itemDiv.innerHTML = `
+          <span>${book.title} - ₹${book.price}</span>
+          <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartItemsDiv.appendChild(itemDiv);
+      });
+
+      cartTotalDiv.textContent = `Total: ₹${calculateTotal()}`;
+    }
+
+    // Initial render
+    displayBooks();
+  </script>
+</body>
+</html>
